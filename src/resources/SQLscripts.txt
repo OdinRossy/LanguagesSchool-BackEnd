@@ -1,0 +1,11 @@
+
+CREATE SCHEMA LanguagesSchool DEFAULT CHARACTER SET utf8;
+
+select * from (
+    select *
+    from Student
+    where username = 'vasvas'
+    UNION /*либо UNION ALL при необходимости сохранения дубликатов*/
+    select *
+    from Teacher
+    where username = 'vasvas') AS select_result;
