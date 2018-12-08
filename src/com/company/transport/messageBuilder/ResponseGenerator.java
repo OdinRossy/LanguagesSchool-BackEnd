@@ -1,9 +1,6 @@
 package com.company.transport.messageBuilder;
 
-import com.company.logic.workers.CourseWorker;
-import com.company.logic.workers.OrderWorker;
-import com.company.logic.workers.StudentWorker;
-import com.company.logic.workers.TeacherWorker;
+import com.company.logic.workers.*;
 import com.company.model.*;
 import com.company.transport.configuration.ServerConfiguration;
 import com.company.transport.request.Request;
@@ -107,12 +104,16 @@ public class ResponseGenerator implements ServerConfiguration {
             }
 
             case "Course" : {
-
+                throw new RuntimeException("course is not ready");
             }
 
             case "Order" : {
                 Order order = (Order) request.getModel();
                 return OrderWorker.addNewOrder(order);
+            }
+            case "HelpStudent" : {
+                HelpStudent helpStudent = (HelpStudent) request.getModel();
+                return HelpStudentWorker.insertHelpStudent(helpStudent);
             }
 
             default:
