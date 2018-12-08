@@ -32,7 +32,6 @@ public class App {
 
         switch (answer) {
             case "y" : {
-
                 System.out.println("Create table " + DbTables.TABLE_LANGUAGES + ": "
                         + MySqlHandler.createTable(DbTables.TABLE_LANGUAGES));
 
@@ -56,6 +55,29 @@ public class App {
 
                 System.out.println("Create table " + DbTables.TABLE_HELP_STUDENTS + ": "
                         + MySqlHandler.createTable(DbTables.TABLE_HELP_STUDENTS));
+
+                System.out.println("======================================================================");
+                System.out.println("Importing data..");
+                System.out.println("Insert " + DbTables.TABLE_LANGUAGES + ": " +
+                        MySqlHandler.importData(DbTables.TABLE_LANGUAGES));
+
+                System.out.println("Insert " + DbTables.TABLE_LEVELS_OF_LANGUAGE + ": " +
+                        MySqlHandler.importData(DbTables.TABLE_LEVELS_OF_LANGUAGE));
+
+                System.out.println("Insert " + DbTables.TABLE_NAMES_OF_COURSES + ": " +
+                        MySqlHandler.importData(DbTables.TABLE_NAMES_OF_COURSES));
+
+                System.out.println("Insert " + DbTables.TABLE_STUDENTS + ": " +
+                        MySqlHandler.importData(DbTables.TABLE_STUDENTS));
+
+                System.out.println("Insert " + DbTables.TABLE_TEACHERS + ": " +
+                        MySqlHandler.importData(DbTables.TABLE_TEACHERS));
+
+                System.out.println("Insert " + DbTables.TABLE_COURSES + ": " +
+                        MySqlHandler.importData(DbTables.TABLE_COURSES));
+
+                System.out.println("Insert " + DbTables.TABLE_ORDER_COURSES + ": " +
+                        MySqlHandler.importData(DbTables.TABLE_ORDER_COURSES));
                 break;
             }
             case "n" :{

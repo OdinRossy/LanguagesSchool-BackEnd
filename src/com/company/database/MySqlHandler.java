@@ -42,10 +42,36 @@ public class MySqlHandler implements DbConfiguration {
         return false;
     }
 
-    public static boolean executeCustomQuery(String query) {
+    public static boolean importData(String tableName) {
+
+        if (tableName.equals(DbTables.TABLE_LANGUAGES)) {
+            return executeCustomQuery(DbQueries.INSERT_LANGUAGES);
+        }
+        if (tableName.equals(DbTables.TABLE_LEVELS_OF_LANGUAGE)) {
+            return executeCustomQuery(DbQueries.INSERT_LEVELS_OF_LANGUAGE);
+        }
+        if (tableName.equals(DbTables.TABLE_NAMES_OF_COURSES)) {
+            return executeCustomQuery(DbQueries.INSERT_NAMES_OF_COURSES);
+        }
+        if (tableName.equals(DbTables.TABLE_STUDENTS)) {
+            return executeCustomQuery(DbQueries.INSERT_STUDENTS);
+        }
+        if (tableName.equals(DbTables.TABLE_TEACHERS)) {
+            return executeCustomQuery(DbQueries.INSERT_TEACHERS);
+        }
+        if (tableName.equals(DbTables.TABLE_COURSES)) {
+            return executeCustomQuery(DbQueries.INSERT_COURSES);
+        }
+        if (tableName.equals(DbTables.TABLE_ORDER_COURSES)) {
+            return executeCustomQuery(DbQueries.INSERT_ORDER_COURSES);
+        }
+        return false;
+    }
+
+    private static boolean executeCustomQuery(String query) {
         try (Connection connection = getDBConnection()) {
             preparedStatement = connection.prepareStatement(query);
-            return preparedStatement.executeUpdate() >= 0;
+            return preparedStatement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
@@ -53,8 +79,6 @@ public class MySqlHandler implements DbConfiguration {
             closePreparedStatement();
         }
     }
-
-
 
     protected static void closePreparedStatement(){
         try {
