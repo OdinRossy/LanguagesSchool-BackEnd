@@ -4,9 +4,11 @@ import com.company.database.configuration.DbTables;
 import com.company.model.Student;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class MySqlStudentsHandler extends MySqlHandler {
@@ -123,7 +125,7 @@ public class MySqlStudentsHandler extends MySqlHandler {
                 student.setLastName(resultSet.getString("last_name"));
                 student.setUsername(resultSet.getString("username"));
                 student.setPassword(resultSet.getString("password"));
-                student.setBirthdate(resultSet.getString("birthdate"));
+                student.setBirthdate(resultSet.getDate("birthdate"));
                 student.setMale((resultSet.getString("gender").equalsIgnoreCase("male")));
             }
             return student;
@@ -159,7 +161,10 @@ public class MySqlStudentsHandler extends MySqlHandler {
             preparedStatement.setString(2, student.getMiddleName());
             preparedStatement.setString(3, student.getLastName());
             preparedStatement.setString(4, student.getPassword());
-            preparedStatement.setObject(5, student.getBirthdate("String"));
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(student.getBirthdate());
+            String formatedDate = cal.get(Calendar.YEAR) + "-" + (cal.get(Calendar.MONTH) + 1) + "-" + cal.get(Calendar.DATE);
+            preparedStatement.setString(5, formatedDate);
             preparedStatement.setString(6, (student.isMale() ? "Male" : "Female"));
             preparedStatement.setString(7, student.getUsername());
 
@@ -208,7 +213,10 @@ public class MySqlStudentsHandler extends MySqlHandler {
             preparedStatement.setString(3,student.getLastName());
             preparedStatement.setString(4,student.getUsername());
             preparedStatement.setString(5,student.getPassword());
-            preparedStatement.setString(6, (String) student.getBirthdate("String"));
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(student.getBirthdate());
+            String formatedDate = cal.get(Calendar.YEAR) + "-" + (cal.get(Calendar.MONTH) + 1) + "-" + cal.get(Calendar.DATE);
+            preparedStatement.setString(6, formatedDate);
             preparedStatement.setString(7,(student.isMale()?"Male":"Female"));
 
             preparedStatement.execute();

@@ -4,9 +4,11 @@ import com.company.database.configuration.DbTables;
 import com.company.model.Teacher;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class MySqlTeachersHandler extends MySqlHandler {
@@ -29,7 +31,10 @@ public class MySqlTeachersHandler extends MySqlHandler {
             preparedStatement.setString(2, teacher.getMiddleName());
             preparedStatement.setString(3, teacher.getLastName());
             preparedStatement.setString(4, teacher.getPassword());
-            preparedStatement.setObject(5, teacher.getBirthdate("String"));
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(teacher.getBirthdate());
+            String formatedDate = cal.get(Calendar.YEAR) + "-" + (cal.get(Calendar.MONTH) + 1) + "-" + cal.get(Calendar.DATE);
+            preparedStatement.setString(5,formatedDate);
             preparedStatement.setString(6, (teacher.isMale() ? "Male" : "Female"));
             preparedStatement.setDouble(7,teacher.getSalary());
             preparedStatement.setString(8,teacher.getInfo());

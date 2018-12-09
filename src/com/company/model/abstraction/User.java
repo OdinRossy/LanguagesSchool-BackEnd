@@ -102,17 +102,8 @@ public abstract class User implements Model {
         this.password = password;
     }
 
-    public Object getBirthdate(String returnType) {
-        switch (returnType.toLowerCase()) {
-            case "date" : {
-                return birthdate;
-            }
-            case "string" : {
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                return simpleDateFormat.format(birthdate);
-            }
-            default: return null;
-        }
+    public Date getBirthdate() {
+        return birthdate;
     }
 
     public void setBirthdate(String birthdate){
