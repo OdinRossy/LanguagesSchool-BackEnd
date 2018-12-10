@@ -6,14 +6,6 @@ import java.util.Date;
 
 public class Teacher extends User {
 
-    //    private int id;
-//    private String firstName;
-//    private String middleName;
-//    private String lastName;
-//    private Date birthdate;
-//    private String username;
-//    private String password;
-//    private boolean isMale;
     private double salary;
     private String info;
     private String language;
