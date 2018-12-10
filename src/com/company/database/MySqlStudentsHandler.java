@@ -13,6 +13,44 @@ import java.util.List;
 
 public class MySqlStudentsHandler extends MySqlHandler {
 
+    public static int getCountByTeacherUsername(String username) {
+        ResultSet resultSet = null;
+        int count = 0;
+        try (Connection connection = getDBConnection()) {
+            final String query = "select " +
+                    "count(students.username) " +
+                    "from orders_courses\n " +
+                    "inner join courses on courses.id = orders_courses.id_course\n" +
+                    "inner join teachers on teachers.id = courses.id_teacher\n" +
+                    "inner join names_of_courses on courses.id_name_of_course = names_of_courses.id\n" +
+                    "inner join students on orders_courses.username_student = students.username\n" +
+                    "where teachers.username = ?;";
+
+            preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, username);
+            resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                count = resultSet.getInt("count(students.username)");
+            }
+
+            return count;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return -1;
+        } finally {
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } finally {
+                closePreparedStatement();
+            }
+        }
+    }
+
     public static List<Student> selectAllStudents() {
         ResultSet resultSet = null;
         try (Connection connection = getDBConnection()) {

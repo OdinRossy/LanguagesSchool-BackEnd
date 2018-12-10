@@ -13,6 +13,10 @@ public class StudentWorker {
         return null;
     }
 
+    public static Response getCountOfStudentsByTeacherUsername(String username) {
+        return new Response(true,null,String.valueOf(MySqlStudentsHandler.getCountByTeacherUsername(username)));
+    }
+
     public static Response getAllStudentsByTeacherUsername(String username) {
         List<Student> students = MySqlStudentsHandler.selectAllStudentsByTeacherUsername(username);
         if (students != null) {

@@ -47,6 +47,9 @@ public class ResponseGenerator implements ServerConfiguration {
                         return StudentWorker.getAllStudentsByTeacherUsername(parsed[1]);
 
                     }
+                    case "count_by_username" : {
+                        return StudentWorker.getCountOfStudentsByTeacherUsername(parsed[1]);
+                    }
                     case "sign_in" : {
                         return StudentWorker.signIn(student);
                     }
