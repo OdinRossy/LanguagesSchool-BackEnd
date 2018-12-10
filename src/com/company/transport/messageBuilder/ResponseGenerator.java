@@ -87,6 +87,10 @@ public class ResponseGenerator implements ServerConfiguration {
                     default: throw new RuntimeException("Unknown message for " + modelName + ": " + request.getMessage());
                 }
             }
+            case "TeacherStatistics" : {
+                TeacherStatistics teacherStatistics = (TeacherStatistics) request.getModel();
+                return TeacherStatisticsWorker.getStatisticByTeacherUsername(teacherStatistics.getTeacherUsername());
+            }
             default: throw new RuntimeException("Unknown model " + modelName);
         }
     }
