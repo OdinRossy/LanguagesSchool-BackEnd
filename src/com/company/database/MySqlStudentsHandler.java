@@ -17,9 +17,7 @@ public class MySqlStudentsHandler extends MySqlHandler {
         ResultSet resultSet = null;
         int count = 0;
         try (Connection connection = getDBConnection()) {
-            final String query = "select " +
-                    "count(students.username) " +
-                    "from orders_courses\n " +
+            final String query = "select count(distinct students.username) from orders_courses\n" +
                     "inner join courses on courses.id = orders_courses.id_course\n" +
                     "inner join teachers on teachers.id = courses.id_teacher\n" +
                     "inner join names_of_courses on courses.id_name_of_course = names_of_courses.id\n" +
@@ -31,7 +29,7 @@ public class MySqlStudentsHandler extends MySqlHandler {
             resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                count = resultSet.getInt("count(students.username)");
+                count = resultSet.getInt("count(distinct students.username)");
             }
 
             return count;
