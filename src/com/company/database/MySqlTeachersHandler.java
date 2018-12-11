@@ -1,6 +1,7 @@
 package com.company.database;
 
 import com.company.database.configuration.DbTables;
+import com.company.model.Language;
 import com.company.model.Teacher;
 
 import java.sql.Connection;
@@ -34,10 +35,10 @@ public class MySqlTeachersHandler extends MySqlHandler {
             Calendar cal = Calendar.getInstance();
             cal.setTime(teacher.getBirthdate());
             String formatedDate = cal.get(Calendar.YEAR) + "-" + (cal.get(Calendar.MONTH) + 1) + "-" + cal.get(Calendar.DATE);
-            preparedStatement.setString(5,formatedDate);
+            preparedStatement.setString(5, formatedDate);
             preparedStatement.setString(6, (teacher.isMale() ? "Male" : "Female"));
-            preparedStatement.setDouble(7,teacher.getSalary());
-            preparedStatement.setString(8,teacher.getInfo());
+            preparedStatement.setDouble(7, teacher.getSalary());
+            preparedStatement.setString(8, teacher.getInfo());
             preparedStatement.setString(9, teacher.getUsername());
 
             int rows = preparedStatement.executeUpdate();
@@ -76,8 +77,8 @@ public class MySqlTeachersHandler extends MySqlHandler {
                     "                where teachers.username = ? and teachers.password = ?;";
 
             preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(1,teacher.getUsername());
-            preparedStatement.setString(2,teacher.getPassword());
+            preparedStatement.setString(1, teacher.getUsername());
+            preparedStatement.setString(2, teacher.getPassword());
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 teacher.setId(resultSet.getInt("id"));
@@ -90,7 +91,9 @@ public class MySqlTeachersHandler extends MySqlHandler {
                 teacher.setMale(resultSet.getString("gender").equalsIgnoreCase("male"));
                 teacher.setSalary(resultSet.getDouble("salary"));
                 teacher.setInfo(resultSet.getString("bio"));
-                teacher.setLanguage(resultSet.getString("name"));
+                Language language = new Language();
+                language.setName(resultSet.getString("name"));
+                teacher.setLanguage(language);
             }
             return teacher;
         } catch (SQLException e) {
@@ -139,7 +142,9 @@ public class MySqlTeachersHandler extends MySqlHandler {
                 teacher.setMiddleName(resultSet.getString(2));
                 teacher.setLastName(resultSet.getString(3));
                 teacher.setBirthdate(resultSet.getDate(4));
-                teacher.setLanguage(resultSet.getString(5));
+                Language language = new Language();
+                language.setName(resultSet.getString("name"));
+                teacher.setLanguage(language);
                 teachers.add(teacher);
             }
             return teachers;
@@ -193,7 +198,9 @@ public class MySqlTeachersHandler extends MySqlHandler {
                 teacher.setMale(resultSet.getString(8).equalsIgnoreCase("Male"));
                 teacher.setSalary(resultSet.getDouble(9));
                 teacher.setInfo(resultSet.getString(10));
-                teacher.setLanguage(resultSet.getString(11));
+                Language language = new Language();
+                language.setName(resultSet.getString("name"));
+                teacher.setLanguage(language);
                 teachers.add(teacher);
             }
             return teachers;
@@ -219,7 +226,7 @@ public class MySqlTeachersHandler extends MySqlHandler {
             final String query = "DELETE FROM LanguagesSchool.teachers WHERE (LanguagesSchool.teachers.username=?);";
             preparedStatement = connection.prepareStatement(query);
 
-            preparedStatement.setString(1,teacher.getUsername());
+            preparedStatement.setString(1, teacher.getUsername());
             int rows = preparedStatement.executeUpdate();
 
             return rows > 0;
@@ -231,5 +238,38 @@ public class MySqlTeachersHandler extends MySqlHandler {
         }
     }
 
-
+    public static boolean insertTeacher(Teacher teacher) {
+        try (Connection connection = getDBConnection()) {
+            final String query = "INSERT INTO `languagesschool`.`teachers` (" +
+                    "`first_name`, " +
+                    "`middle_name`, " +
+                    "`last_name`, " +
+                    "`username`, " +
+                    "`password`, " +
+                    "`birthdate`, " +
+                    "`gender`, " +
+                    "`salary`, " +
+                    "`id_language`" +
+                    ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
+            preparedStatement = connection.prepareStatement(query);
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(teacher.getBirthdate());
+            String formatedDate = cal.get(Calendar.YEAR) + "-" + (cal.get(Calendar.MONTH) + 1) + "-" + cal.get(Calendar.DATE);
+            preparedStatement.setString(1, teacher.getFirstName());
+            preparedStatement.setString(2, teacher.getMiddleName());
+            preparedStatement.setString(3, teacher.getLastName());
+            preparedStatement.setString(4, teacher.getUsername());
+            preparedStatement.setString(5, teacher.getPassword());
+            preparedStatement.setString(6, formatedDate);
+            preparedStatement.setString(7, (teacher.isMale() ? "Male" : "Female"));
+            preparedStatement.setDouble(8, teacher.getSalary());
+            preparedStatement.setInt(9, teacher.getLanguage().getId());
+            return preparedStatement.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            closePreparedStatement();
+        }
+    }
 }

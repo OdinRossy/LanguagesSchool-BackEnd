@@ -111,7 +111,8 @@ public class ResponseGenerator implements ServerConfiguration {
             }
 
             case "Teacher" : {
-                throw new RuntimeException("teacher is not ready");
+                Teacher teacher = (Teacher) request.getModel();
+                return TeacherWorker.signUp(teacher);
             }
 
             case "Course" : {

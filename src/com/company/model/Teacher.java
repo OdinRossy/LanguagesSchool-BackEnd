@@ -8,7 +8,7 @@ public class Teacher extends User {
 
     private double salary;
     private String info;
-    private String language;
+    private Language language;
 
     @Override
     public String getModelName() {
@@ -31,7 +31,7 @@ public class Teacher extends User {
         super(username, password);
     }
 
-    public Teacher(String firstName, String middleName, String lastName, String username, String password, Date bitrhdate, boolean isMale, double salary, String info, String language) {
+    public Teacher(String firstName, String middleName, String lastName, String username, String password, Date bitrhdate, boolean isMale, double salary, String info, Language language) {
         super(firstName, middleName, lastName, username, password, bitrhdate, isMale);
         this.salary = salary;
         this.info = info;
@@ -54,11 +54,15 @@ public class Teacher extends User {
         this.info = info;
     }
 
-    public String getLanguage() {
+    public Language getLanguage() {
         return language;
     }
 
-    public void setLanguage(String language) {
+    public void setLanguage(Language language) {
         this.language = language;
+    }
+
+    public String getLanguageName() {
+        return language.getName();
     }
 }

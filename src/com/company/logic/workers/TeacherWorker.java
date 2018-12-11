@@ -10,6 +10,10 @@ import java.util.List;
 
 public class TeacherWorker {
 
+    public static Response signUp(Teacher teacher) {
+        return new Response(MySqlTeachersHandler.insertTeacher(teacher),teacher);
+    }
+
     public static Response signIn(Teacher teacher) {
         if (teacher.getUsername().equals(ServerConfiguration.ADMIN_USERNAME)
                 && teacher.getPassword().equals(ServerConfiguration.ADMIN_PASSWORD)) {
