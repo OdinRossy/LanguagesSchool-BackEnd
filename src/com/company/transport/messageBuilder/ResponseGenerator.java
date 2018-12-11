@@ -94,6 +94,10 @@ public class ResponseGenerator implements ServerConfiguration {
                 TeacherStatistics teacherStatistics = (TeacherStatistics) request.getModel();
                 return TeacherStatisticsWorker.getStatisticByTeacherUsername(teacherStatistics.getTeacherUsername());
             }
+            case "Language" : {
+                Language language = (Language) request.getModel();
+                return LanguageWorker.getAllLanguages();
+            }
             default: throw new RuntimeException("Unknown model " + modelName);
         }
     }

@@ -10,29 +10,6 @@ import java.util.List;
 
 public class MySqlCoursesHandler extends MySqlHandler {
 
-//    public static boolean insertCourse(Course course) {
-//        try (Connection connection = getDBConnection()) {
-//
-//            final String query = "INSERT INTO LanguagesSchool.courses (id_name_of_course, id_language, id_level, id_teacher, cost, start_date, duration, description) VALUES (?,?,?,?,?,?,?,?)";
-//            MySqlHandler.preparedStatement = connection.prepareStatement(query);
-//
-//            preparedStatement.setString(course.get);
-//            preparedStatement.setString();
-//            preparedStatement.setString();
-//            preparedStatement.setString(4,student.getUsername());
-//            preparedStatement.setString(5,student.getPassword());
-//            preparedStatement.setString(6, (String) student.getBirthdate("String"));
-//            preparedStatement.setString(7,(student.isMale()?"Male":"Female"));
-//
-//            return getStudent(student);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return false;
-//        } finally {
-//            closePreparedStatement();
-//        }
-//    }
-
     public static List<Course> selectAllCourses() {
         List<Course> courses = new ArrayList<>();
         ResultSet resultSet = null;
@@ -193,5 +170,4 @@ public class MySqlCoursesHandler extends MySqlHandler {
         }
         return courses;
     }
-
 }

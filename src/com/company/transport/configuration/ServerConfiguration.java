@@ -7,12 +7,10 @@ public interface ServerConfiguration {
     String PATH_TO_PROPERTY_FILE = "src/resources/ServerConfiguration.properties";
     PropertyLoader propertyLoader = new PropertyLoader(PATH_TO_PROPERTY_FILE);
 
-//          Properties names:
-    String PROPERTY_SERVER_PORT = "server.port";
-    String PROPERTY_SERVER_ADDRESS = "server.address";
+    int TCP_SERVER_PORT = Integer.parseInt(propertyLoader.loadProperty("server.port"));
+    String TCP_SERVER_ADDRESS = propertyLoader.loadProperty("server.address");
 
-    //          Final fields for socket transport.configuration
-    int TCP_SERVER_PORT = Integer.parseInt(propertyLoader.loadProperty(PROPERTY_SERVER_PORT));
-    String TCP_SERVER_ADDRESS = propertyLoader.loadProperty(PROPERTY_SERVER_ADDRESS);
+    String ADMIN_USERNAME = propertyLoader.loadProperty("admin.username");
+    String ADMIN_PASSWORD = propertyLoader.loadProperty("admin.password");
 
 }

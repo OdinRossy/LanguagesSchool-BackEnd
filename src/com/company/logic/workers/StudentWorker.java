@@ -3,6 +3,7 @@ package com.company.logic.workers;
 import com.company.database.MySqlStudentsHandler;
 import com.company.model.Student;
 import com.company.model.buffers.StudentsArrayList;
+import com.company.transport.configuration.ServerConfiguration;
 import com.company.transport.response.Response;
 
 import java.util.List;
@@ -29,12 +30,17 @@ public class StudentWorker {
     }
 
     public static Response signIn(Student student) throws NullPointerException {
-        student = MySqlStudentsHandler.selectStudentByUsernameAndPassword(student);
-//        System.out.println(student.toString());
-        if (student.getFirstName() != null) {
-            return new Response(true,student,"Success");
+        if (student.getUsername().equals(ServerConfiguration.ADMIN_USERNAME)
+                && student.getPassword().equals(ServerConfiguration.ADMIN_PASSWORD)) {
+            return new Response(true,null,"admin");
         } else {
-            return new Response(false,null);
+            student = MySqlStudentsHandler.selectStudentByUsernameAndPassword(student);
+//        System.out.println(student.toString());
+            if (student.getFirstName() != null) {
+                return new Response(true, student, "Success");
+            } else {
+                return new Response(false, null);
+            }
         }
     }
 

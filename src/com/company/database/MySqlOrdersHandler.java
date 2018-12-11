@@ -54,41 +54,4 @@ public class MySqlOrdersHandler extends MySqlHandler {
             closePreparedStatement();
         }
     }
-
-//    public static List<HelpStudents> selectAllHelpsStudentsByStudentUsername(HelpStudents helpStudent) {
-//        List<HelpStudents> helpStudents = new ArrayList<>();
-//        ResultSet resultSet = null;
-//        try (Connection connection = getDBConnection()) {
-//
-//            final String query = "SELECT * FROM LanguagesSchool.orders_courses WHERE student_username = ?";
-//
-//            preparedStatement = connection.prepareStatement(query);
-//            preparedStatement.setString(1,helpStudent.getStudentUsername());
-//
-//            resultSet = preparedStatement.executeQuery();
-//            while (resultSet.next()) {
-//                helpStudent = new HelpStudents();
-//                helpStudent.setId(resultSet.getInt("id"));
-//                helpStudent.setStudentUsername(resultSet.getString("student_username"));
-//                helpStudent.setMessage(resultSet.getString("message"));
-//                helpStudent.setRequestDateTime(resultSet.getDate("request_date_time"));
-//                helpStudents.add(helpStudent);
-//            }
-//            return helpStudents;
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//            return null;
-//        } finally {
-//            try {
-//                if (resultSet != null) {
-//                    resultSet.close();
-//                }
-//            } catch (SQLException e) {
-//                e.printStackTrace();
-//            } finally {
-//                closePreparedStatement();
-//            }
-//        }
-//    }
-
 }

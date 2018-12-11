@@ -3,6 +3,7 @@ package com.company.logic.workers;
 import com.company.database.MySqlTeachersHandler;
 import com.company.model.Teacher;
 import com.company.model.buffers.TeachersArrayList;
+import com.company.transport.configuration.ServerConfiguration;
 import com.company.transport.response.Response;
 
 import java.util.List;
@@ -10,12 +11,17 @@ import java.util.List;
 public class TeacherWorker {
 
     public static Response signIn(Teacher teacher) {
-        teacher = MySqlTeachersHandler.selectTeacherByUsernameAndPassword(teacher);
-//        System.out.println(teacher.toString());
-        if (teacher.getFirstName() != null) {
-            return new Response(true, teacher,"Success");
+        if (teacher.getUsername().equals(ServerConfiguration.ADMIN_USERNAME)
+                && teacher.getPassword().equals(ServerConfiguration.ADMIN_PASSWORD)) {
+            return new Response(true,null,"admin");
         } else {
-            return new Response(false,null);
+            teacher = MySqlTeachersHandler.selectTeacherByUsernameAndPassword(teacher);
+//        System.out.println(teacher.toString());
+            if (teacher.getFirstName() != null) {
+                return new Response(true, teacher, "Success");
+            } else {
+                return new Response(false, null);
+            }
         }
     }
 

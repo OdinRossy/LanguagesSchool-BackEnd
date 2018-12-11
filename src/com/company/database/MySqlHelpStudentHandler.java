@@ -1,6 +1,5 @@
 package com.company.database;
 
-import com.company.model.HelpStudent;
 
 import java.sql.Connection;
 import java.sql.SQLException;
