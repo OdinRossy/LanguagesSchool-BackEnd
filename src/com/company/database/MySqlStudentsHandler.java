@@ -151,8 +151,8 @@ public class MySqlStudentsHandler extends MySqlHandler {
                     "WHERE LanguagesSchool.students.username = ? AND LanguagesSchool.students.password = ?;";
 
             preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(1,student.getUsername());
-            preparedStatement.setString(2,student.getPassword());
+            preparedStatement.setString(1, student.getUsername());
+            preparedStatement.setString(2, student.getPassword());
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 student.setFirstName(resultSet.getString("first_name"));
@@ -219,7 +219,7 @@ public class MySqlStudentsHandler extends MySqlHandler {
             final String query = "DELETE FROM LanguagesSchool.students WHERE (LanguagesSchool.students.username=?);";
             preparedStatement = connection.prepareStatement(query);
 
-            preparedStatement.setString(1,student.getUsername());
+            preparedStatement.setString(1, student.getUsername());
             int rows = preparedStatement.executeUpdate();
 
             return rows > 0;
@@ -232,7 +232,6 @@ public class MySqlStudentsHandler extends MySqlHandler {
     }
 
     public static Student insertStudent(Student student) {
-        ResultSet resultSet = null;
         try (Connection connection = getDBConnection()) {
             final String query = "INSERT INTO LanguagesSchool.students (" +
                     "first_name, " +
@@ -243,16 +242,16 @@ public class MySqlStudentsHandler extends MySqlHandler {
                     "birthdate, " +
                     "gender) VALUES (?,?,?,?,?,?,?)";
             preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(1,student.getFirstName());
-            preparedStatement.setString(2,student.getMiddleName());
-            preparedStatement.setString(3,student.getLastName());
-            preparedStatement.setString(4,student.getUsername());
-            preparedStatement.setString(5,student.getPassword());
+            preparedStatement.setString(1, student.getFirstName());
+            preparedStatement.setString(2, student.getMiddleName());
+            preparedStatement.setString(3, student.getLastName());
+            preparedStatement.setString(4, student.getUsername());
+            preparedStatement.setString(5, student.getPassword());
             Calendar cal = Calendar.getInstance();
             cal.setTime(student.getBirthdate());
             String formatedDate = cal.get(Calendar.YEAR) + "-" + (cal.get(Calendar.MONTH) + 1) + "-" + cal.get(Calendar.DATE);
             preparedStatement.setString(6, formatedDate);
-            preparedStatement.setString(7,(student.isMale()?"Male":"Female"));
+            preparedStatement.setString(7, (student.isMale() ? "Male" : "Female"));
 
             preparedStatement.execute();
 
@@ -261,15 +260,7 @@ public class MySqlStudentsHandler extends MySqlHandler {
             e.printStackTrace();
             return null;
         } finally {
-            try {
-                if (resultSet != null) {
-                    resultSet.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            } finally {
-                closePreparedStatement();
-            }
+            closePreparedStatement();
         }
     }
 }
