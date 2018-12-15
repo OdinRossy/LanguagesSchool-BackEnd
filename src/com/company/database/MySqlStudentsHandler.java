@@ -226,13 +226,16 @@ public class MySqlStudentsHandler extends MySqlHandler {
     public static boolean deleteStudent(Student student) {
         try (Connection connection = getDBConnection()) {
 
-            final String query = "DELETE FROM LanguagesSchool.students WHERE (LanguagesSchool.students.username=?);";
-            preparedStatement = connection.prepareStatement(query);
-
+            final String query1 = "DELETE FROM LanguagesSchool.students WHERE (LanguagesSchool.students.username=?);";
+            preparedStatement = connection.prepareStatement(query1);
             preparedStatement.setString(1, student.getUsername());
-            int rows = preparedStatement.executeUpdate();
+            preparedStatement.execute();
 
-            return rows > 0;
+            final String query2 = "DELETE FROM LanguagesSchool.users WHERE (LanguagesSchool.users.login=?);";
+            preparedStatement = connection.prepareStatement(query2);
+            preparedStatement.setString(1, student.getUsername());
+            preparedStatement.execute();
+            return true;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
