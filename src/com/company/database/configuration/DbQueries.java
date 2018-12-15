@@ -2,192 +2,263 @@ package com.company.database.configuration;
 
 public interface DbQueries extends DbConfiguration {
 
-    String CREATE_TABLE_LANGUAGES = "CREATE TABLE " + DB_SCHEMA + ".languages (\n" +
-            "  id INT NOT NULL AUTO_INCREMENT,\n" +
-            "  name VARCHAR(45) NOT NULL,\n" +
-            "  PRIMARY KEY (id),\n" +
-            "  UNIQUE INDEX id_UNIQUE (id ASC) VISIBLE,\n" +
-            "  UNIQUE INDEX name_UNIQUE (name ASC) VISIBLE);\n";
+    String CREATE_TABLE_LANGUAGES = "CREATE TABLE languages ( " +
+            "  id INT NOT NULL AUTO_INCREMENT, " +
+            "  name VARCHAR(45) NOT NULL, " +
+            "  PRIMARY KEY (id), " +
+            "  UNIQUE INDEX id_UNIQUE (id ASC) VISIBLE, " +
+            "  UNIQUE INDEX name_UNIQUE (name ASC) VISIBLE);";
 
-    String CREATE_TABLE_LEVELS_OF_LANGUAGE = "CREATE TABLE " + DB_SCHEMA + ".levels_of_language (\n" +
-            "  id INT NOT NULL AUTO_INCREMENT,\n" +
-            "  level VARCHAR(45) NOT NULL,\n" +
-            "  PRIMARY KEY (id),\n" +
-            "  UNIQUE INDEX id_UNIQUE (id ASC) VISIBLE,\n" +
-            "  UNIQUE INDEX level_UNIQUE (level ASC) VISIBLE);\n";
+    String CREATE_TABLE_LEVELS_OF_LANGUAGE = "CREATE TABLE levels_of_language ( " +
+            "  id INT NOT NULL AUTO_INCREMENT, " +
+            "  level VARCHAR(45) NOT NULL, " +
+            "  PRIMARY KEY (id), " +
+            "  UNIQUE INDEX id_UNIQUE (id ASC) VISIBLE, " +
+            "  UNIQUE INDEX level_UNIQUE (level ASC) VISIBLE);";
 
 
-    String CREATE_TABLE_NAMES_OF_COURSES = "CREATE TABLE " + DB_SCHEMA + ".names_of_courses (\n" +
-            "  id INT NOT NULL AUTO_INCREMENT,\n" +
-            "  name VARCHAR(45) NOT NULL,\n" +
-            "  PRIMARY KEY (id),\n" +
-            "  UNIQUE INDEX id_UNIQUE (id ASC) VISIBLE,\n" +
-            "  UNIQUE INDEX name_UNIQUE (name ASC) VISIBLE);\n";
+    String CREATE_TABLE_NAMES_OF_COURSES = "CREATE TABLE names_of_courses ( " +
+            "  id INT NOT NULL AUTO_INCREMENT, " +
+            "  name VARCHAR(45) NOT NULL, " +
+            "  PRIMARY KEY (id), " +
+            "  UNIQUE INDEX id_UNIQUE (id ASC) VISIBLE, " +
+            "  UNIQUE INDEX name_UNIQUE (name ASC) VISIBLE);";
 
-    String CREATE_TABLE_STUDENTS = "CREATE TABLE " + DB_SCHEMA + ".students (\n" +
-            "  id INT NOT NULL AUTO_INCREMENT,\n" +
-            "  first_name VARCHAR(45) NOT NULL,\n" +
-            "  middle_name VARCHAR(45) NOT NULL,\n" +
-            "  last_name VARCHAR(45) NOT NULL,\n" +
-            "  username VARCHAR(45) NOT NULL,\n" +
-            "  password VARCHAR(45) NOT NULL,\n" +
-            "  birthdate DATE NOT NULL,\n" +
-            "  gender ENUM('Male', 'Female') NOT NULL,\n" +
-            "  UNIQUE INDEX id_UNIQUE (id ASC) VISIBLE,\n" +
-            "  PRIMARY KEY (username),\n" +
-            "  UNIQUE INDEX username_UNIQUE (username ASC) VISIBLE);\n";
+    String CREATE_TABLE_USERS = "CREATE TABLE users ( " +
+            "  id INT NOT NULL AUTO_INCREMENT, " +
+            "  first_name VARCHAR(45) NOT NULL, " +
+            "  middle_name VARCHAR(45) NOT NULL, " +
+            "  last_name VARCHAR(45) NOT NULL, " +
+            "  login VARCHAR(45) NOT NULL, " +
+            "  password VARCHAR(45) NOT NULL, " +
+            "  birthdate DATE NOT NULL, " +
+            "  gender ENUM('Мужской', 'Женский') NOT NULL, " +
+            "  PRIMARY KEY (login), " +
+            "  UNIQUE INDEX id_UNIQUE (id ASC) VISIBLE, " +
+            "  UNIQUE INDEX username_UNIQUE (login ASC) VISIBLE);";
 
-    String CREATE_TABLE_TEACHERS = "CREATE TABLE " + DB_SCHEMA + ".teachers (\n" +
-            "  id INT NOT NULL AUTO_INCREMENT,\n" +
-            "  first_name VARCHAR(45) NOT NULL,\n" +
-            "  middle_name VARCHAR(45) NOT NULL,\n" +
-            "  last_name VARCHAR(45) NOT NULL,\n" +
-            "  username VARCHAR(45) NOT NULL,\n" +
-            "  password VARCHAR(45) NOT NULL,\n" +
-            "  birthdate DATE NOT NULL,\n" +
-            "  gender ENUM('Male', 'Female') NOT NULL,\n" +
-            "  salary DECIMAL(10,2) NOT NULL,\n" +
-            "  bio VARCHAR(1000) NULL,\n" +
-            "  id_language INT NOT NULL,\n" +
-            "  UNIQUE INDEX id_UNIQUE (id ASC) VISIBLE,\n" +
-            "  PRIMARY KEY (username),\n" +
-            "  UNIQUE INDEX username_UNIQUE (username ASC) VISIBLE,\n" +
-            "  INDEX language_idx (id_language ASC) VISIBLE,\n" +
-            "  CONSTRAINT language\n" +
-            "    FOREIGN KEY (id_language)\n" +
-            "    REFERENCES " + DB_SCHEMA + ".languages (id)\n" +
-            "    ON DELETE CASCADE\n" +
-            "    ON UPDATE CASCADE);\n";
+    String CREATE_TABLE_STUDENTS = "CREATE TABLE students ( " +
+            "  id INT NOT NULL AUTO_INCREMENT, " +
+            "  username VARCHAR(45) NOT NULL, " +
+            "  UNIQUE INDEX id_UNIQUE (id ASC) VISIBLE, " +
+            "  UNIQUE INDEX username_UNIQUE (username ASC) VISIBLE, " +
+            "  PRIMARY KEY (username), " +
+            "  CONSTRAINT student_username " +
+            "    FOREIGN KEY (username) " +
+            "    REFERENCES users (login) " +
+            "    ON DELETE CASCADE " +
+            "    ON UPDATE CASCADE);";
 
-    String CREATE_TABLE_COURSES = "CREATE TABLE " + DB_SCHEMA + ".courses (\n" +
-            "  id INT NOT NULL AUTO_INCREMENT,\n" +
-            "  id_name_of_course INT NOT NULL,\n" +
-            "  id_language INT NOT NULL,\n" +
-            "  id_level INT NOT NULL,\n" +
-            "  id_teacher INT NOT NULL,\n" +
-            "  cost DOUBLE NOT NULL,\n" +
-            "  start_date DATE NOT NULL,\n" +
-            "  duration INT NOT NULL,\n" +
-            "  description VARCHAR(1000) NULL,\n" +
-            "  PRIMARY KEY (id),\n" +
-            "  UNIQUE INDEX id_UNIQUE (id ASC) VISIBLE,\n" +
-            "  INDEX course_language_idx (id_language ASC) VISIBLE,\n" +
-            "  INDEX course_level_idx (id_level ASC) VISIBLE,\n" +
-            "  INDEX course_name_idx (id_name_of_course ASC) VISIBLE,\n" +
-            "  INDEX course_teacher_idx (id_teacher ASC) VISIBLE,\n" +
-            "  CONSTRAINT course_language\n" +
-            "    FOREIGN KEY (id_language)\n" +
-            "    REFERENCES " + DB_SCHEMA + ".languages (id)\n" +
-            "    ON DELETE CASCADE\n" +
-            "    ON UPDATE CASCADE,\n" +
-            "  CONSTRAINT course_level\n" +
-            "    FOREIGN KEY (id_level)\n" +
-            "    REFERENCES " + DB_SCHEMA + ".levels_of_language (id)\n" +
-            "    ON DELETE CASCADE\n" +
-            "    ON UPDATE CASCADE,\n" +
-            "  CONSTRAINT course_name\n" +
-            "    FOREIGN KEY (id_name_of_course)\n" +
-            "    REFERENCES " + DB_SCHEMA + ".names_of_courses (id)\n" +
-            "    ON DELETE CASCADE\n" +
-            "    ON UPDATE CASCADE,\n" +
-            "  CONSTRAINT course_teacher\n" +
-            "    FOREIGN KEY (id_teacher)\n" +
-            "    REFERENCES " + DB_SCHEMA + ".teachers (id)\n" +
-            "    ON DELETE CASCADE\n" +
-            "    ON UPDATE CASCADE);\n";
+    String CREATE_TABLE_TEACHERS = "CREATE TABLE teachers ( " +
+            "  id int(11) NOT NULL AUTO_INCREMENT, " +
+            "  username varchar(45) NOT NULL, " +
+            "  salary decimal(10,2) NOT NULL, " +
+            "  bio varchar(1000) DEFAULT NULL, " +
+            "  id_language int(11) NOT NULL, " +
+            "  PRIMARY KEY (username), " +
+            "  UNIQUE KEY id_UNIQUE (id), " +
+            "  UNIQUE KEY username_UNIQUE (username), " +
+            "  KEY lang_id_idx (id_language), " +
+            "  CONSTRAINT lang_id FOREIGN KEY (id_language) REFERENCES languages (id) ON DELETE CASCADE ON UPDATE CASCADE, " +
+            "  CONSTRAINT teacher_username FOREIGN KEY (username) REFERENCES users (login) ON DELETE CASCADE ON UPDATE CASCADE " +
+            ");";
 
-    String CREATE_TABLE_ORDER_COURSES = "CREATE TABLE " + DB_SCHEMA + ".orders_courses (\n" +
-            "  id INT NOT NULL AUTO_INCREMENT,\n" +
-            "  username_student VARCHAR(45) NOT NULL,\n" +
-            "  id_course INT NOT NULL,\n" +
-            "  PRIMARY KEY (username_student, id_course),\n" +
-            "  UNIQUE INDEX id_UNIQUE (id ASC) VISIBLE,\n" +
-            "  INDEX username_student_idx (username_student ASC) VISIBLE,\n" +
-            "  INDEX order_course_idx (id_course ASC) VISIBLE,\n" +
-            "  CONSTRAINT order_student\n" +
-            "    FOREIGN KEY (username_student)\n" +
-            "    REFERENCES " + DB_SCHEMA + ".students (username)\n" +
-            "    ON DELETE CASCADE\n" +
-            "    ON UPDATE CASCADE,\n" +
-            "  CONSTRAINT order_course\n" +
-            "    FOREIGN KEY (id_course)\n" +
-            "    REFERENCES " + DB_SCHEMA + ".courses (id)\n" +
-            "    ON DELETE CASCADE\n" +
-            "    ON UPDATE CASCADE);\n";
+    String CREATE_TABLE_COURSES = "CREATE TABLE courses ( " +
+            "  id INT NOT NULL AUTO_INCREMENT, " +
+            "  id_name_of_course INT NOT NULL, " +
+            "  id_language INT NOT NULL, " +
+            "  id_level INT NOT NULL, " +
+            "  username_teacher VARCHAR(45) NOT NULL, " +
+            "  cost DOUBLE NOT NULL, " +
+            "  start_date DATE NOT NULL, " +
+            "  duration INT NOT NULL, " +
+            "  description VARCHAR(1000) NULL, " +
+            "  PRIMARY KEY (id), " +
+            "  UNIQUE INDEX id_UNIQUE (id ASC) VISIBLE, " +
+            "  INDEX course_language_idx (id_language ASC) VISIBLE, " +
+            "  INDEX course_name_idx (id_name_of_course ASC) VISIBLE, " +
+            "  INDEX course_level_idx (id_level ASC) VISIBLE, " +
+            "  INDEX course_teacher_idx (username_teacher ASC) VISIBLE, " +
+            "  CONSTRAINT course_language " +
+            "    FOREIGN KEY (id_language) " +
+            "    REFERENCES languages (id) " +
+            "    ON DELETE CASCADE " +
+            "    ON UPDATE CASCADE, " +
+            "  CONSTRAINT course_name " +
+            "    FOREIGN KEY (id_name_of_course) " +
+            "    REFERENCES names_of_courses (id) " +
+            "    ON DELETE CASCADE " +
+            "    ON UPDATE CASCADE, " +
+            "  CONSTRAINT course_level " +
+            "    FOREIGN KEY (id_level) " +
+            "    REFERENCES levels_of_language (id) " +
+            "    ON DELETE CASCADE " +
+            "    ON UPDATE CASCADE, " +
+            "  CONSTRAINT course_teacher " +
+            "    FOREIGN KEY (username_teacher) " +
+            "    REFERENCES teachers (username) " +
+            "    ON DELETE CASCADE " +
+            "    ON UPDATE CASCADE);";
 
-    String CREATE_TABLE_HELP_STUDENTS = "CREATE TABLE " + DB_SCHEMA + ".help_students (\n" +
-            "  id INT NOT NULL AUTO_INCREMENT,\n" +
-            "  student_username VARCHAR(45) NOT NULL,\n" +
-            "  message VARCHAR(1000) NOT NULL,\n" +
-            "  request_date_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,\n" +
-            "  PRIMARY KEY (id),\n" +
-            "  UNIQUE INDEX id_UNIQUE (id ASC) VISIBLE,\n" +
-            "  INDEX username_student_idx (student_username ASC) VISIBLE,\n" +
-            "  CONSTRAINT username_student\n" +
-            "    FOREIGN KEY (student_username)\n" +
-            "    REFERENCES " + DB_SCHEMA + ".students (username)\n" +
-            "    ON DELETE CASCADE\n" +
-            "    ON UPDATE CASCADE);\n";
+    String CREATE_TABLE_ORDER_COURSES = "CREATE TABLE orders_courses ( " +
+            "  id INT NOT NULL AUTO_INCREMENT, " +
+            "  username_student VARCHAR(45) NOT NULL, " +
+            "  id_course INT NOT NULL, " +
+            "  UNIQUE INDEX id_UNIQUE (id ASC) VISIBLE, " +
+            "  PRIMARY KEY (username_student, id_course), " +
+            "  INDEX order_course_idx (id_course ASC) VISIBLE, " +
+            "  CONSTRAINT order_student " +
+            "    FOREIGN KEY (username_student) " +
+            "    REFERENCES students (username) " +
+            "    ON DELETE CASCADE " +
+            "    ON UPDATE CASCADE, " +
+            "  CONSTRAINT order_course " +
+            "    FOREIGN KEY (id_course) " +
+            "    REFERENCES courses (id) " +
+            "    ON DELETE CASCADE " +
+            "    ON UPDATE CASCADE);";
 
-    String INSERT_LANGUAGES = "INSERT INTO `languagesschool.languages (`name`) VALUES ('Английский');\n" +
-            "INSERT INTO `languagesschool.`languages` (`name`) VALUES ('Немецкий');\n" +
-            "INSERT INTO `languagesschool.`languages` (`name`) VALUES ('Китайский');\n" +
-            "INSERT INTO `languagesschool.`languages` (`name`) VALUES ('Японский');\n" +
-            "INSERT INTO `languagesschool.`languages` (`name`) VALUES ('Французский');\n" +
-            "INSERT INTO `languagesschool.`languages` (`name`) VALUES ('Испанский');\n";
+    String CREATE_TABLE_HELP_STUDENTS = "CREATE TABLE help_students ( " +
+            "  id INT NOT NULL AUTO_INCREMENT, " +
+            "  student_username VARCHAR(45) NOT NULL, " +
+            "  message VARCHAR(1000) NOT NULL, " +
+            "  request_date_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
+            "  PRIMARY KEY (id), " +
+            "  UNIQUE INDEX id_UNIQUE (id ASC) VISIBLE, " +
+            "  INDEX username_student_idx (student_username ASC) VISIBLE, " +
+            "  CONSTRAINT username_student " +
+            "    FOREIGN KEY (student_username) " +
+            "    REFERENCES students (username) " +
+            "    ON DELETE CASCADE " +
+            "    ON UPDATE CASCADE);";
 
-    String INSERT_LEVELS_OF_LANGUAGE = "INSERT INTO `languagesschool`.`levels_of_language` (`level`) VALUES ('A1');\n" +
-            "INSERT INTO `languagesschool`.`levels_of_language` (`level`) VALUES ('A2');\n" +
-            "INSERT INTO `languagesschool`.`levels_of_language` (`level`) VALUES ('B1');\n" +
-            "INSERT INTO `languagesschool`.`levels_of_language` (`level`) VALUES ('B2');\n" +
-            "INSERT INTO `languagesschool`.`levels_of_language` (`level`) VALUES ('C1');\n";
+    String [] INSERT_LANGUAGES = {
+            "INSERT INTO languages (name) VALUES ('Английский');",
+            "INSERT INTO languages (name) VALUES ('Немецкий');",
+            "INSERT INTO languages (name) VALUES ('Китайский');",
+            "INSERT INTO languages (name) VALUES ('Японский');",
+            "INSERT INTO languages (name) VALUES ('Французский');",
+            "INSERT INTO languages (name) VALUES ('Испанский');"
+    };
 
-    String INSERT_NAMES_OF_COURSES = "INSERT INTO `languagesschool`.`names_of_courses` (`name`) VALUES ('Английский базовый');\n" +
-            "INSERT INTO `languagesschool`.`names_of_courses` (`name`) VALUES ('Английский для бизнеса');\n" +
-            "INSERT INTO `languagesschool`.`names_of_courses` (`name`) VALUES ('Английский для ИТ');\n" +
-            "INSERT INTO `languagesschool`.`names_of_courses` (`name`) VALUES ('Английский продвинутый');\n" +
-            "INSERT INTO `languagesschool`.`names_of_courses` (`name`) VALUES ('Испанский базовый');\n" +
-            "INSERT INTO `languagesschool`.`names_of_courses` (`name`) VALUES ('Китайский базовый');\n" +
-            "INSERT INTO `languagesschool`.`names_of_courses` (`name`) VALUES ('Немеций продвинутый');\n" +
-            "INSERT INTO `languagesschool`.`names_of_courses` (`name`) VALUES ('Немецкий базовый');\n" +
-            "INSERT INTO `languagesschool`.`names_of_courses` (`name`) VALUES ('Немецкий для детей');\n" +
-            "INSERT INTO `languagesschool`.`names_of_courses` (`name`) VALUES ('Французский базовый');\n" +
-            "INSERT INTO `languagesschool`.`names_of_courses` (`name`) VALUES ('Французский продвинутый');\n" +
-            "INSERT INTO `languagesschool`.`names_of_courses` (`name`) VALUES ('Японский базовый');\n";
+    String [] INSERT_LEVELS_OF_LANGUAGE = {
+            "INSERT INTO levels_of_language (level) VALUES ('A1');",
+            "INSERT INTO levels_of_language (level) VALUES ('A2');",
+            "INSERT INTO levels_of_language (level) VALUES ('B1');",
+            "INSERT INTO levels_of_language (level) VALUES ('B2');",
+            "INSERT INTO levels_of_language (level) VALUES ('C1');"
+    };
 
-    String INSERT_STUDENTS = "INSERT INTO `languagesschool`.`students` (`first_name`, `middle_name`, `last_name`, `username`, `password`, `birthdate`, `gender`) VALUES ('Иван', 'Антонович', 'Писляк', 'pislyakpetr@mail.ru', 'qwerty', '1996-09-12', 'Male');\n" +
-            "INSERT INTO `languagesschool`.`students` (`first_name`, `middle_name`, `last_name`, `username`, `password`, `birthdate`, `gender`) VALUES ('Петр', 'Васильвич', 'Киселев', 'kisslevPP@yandex.by', 'qwerty', '1990-04-05', 'Male');\n" +
-            "INSERT INTO `languagesschool`.`students` (`first_name`, `middle_name`, `last_name`, `username`, `password`, `birthdate`, `gender`) VALUES ('Сергей', 'Павлович', 'Мошка', 'sergickmosh@gmail.com', 'qwerty', '1982-04-14', 'Male');\n" +
-            "INSERT INTO `languagesschool`.`students` (`first_name`, `middle_name`, `last_name`, `username`, `password`, `birthdate`, `gender`) VALUES ('Евгений', 'Андреевич', 'Борисов', 'borisov1996@yandex.ru', 'qwerty', '1996-12-11', 'Male');\n" +
-            "INSERT INTO `languagesschool`.`students` (`first_name`, `middle_name`, `last_name`, `username`, `password`, `birthdate`, `gender`) VALUES ('Екатерина', 'Петровна', 'Малышева', 'kateMal@icloud.com', 'qwerty', '1998-01-01', 'Female');\n";
+    String [] INSERT_NAMES_OF_COURSES = {
+            "INSERT INTO names_of_courses (name) VALUES ('Английский базовый');",
+            "INSERT INTO names_of_courses (name) VALUES ('Английский для бизнеса');",
+            "INSERT INTO names_of_courses (name) VALUES ('Английский для ИТ');",
+            "INSERT INTO names_of_courses (name) VALUES ('Английский продвинутый');",
+            "INSERT INTO names_of_courses (name) VALUES ('Испанский базовый');",
+            "INSERT INTO names_of_courses (name) VALUES ('Китайский базовый');",
+            "INSERT INTO names_of_courses (name) VALUES ('Немеций продвинутый');",
+            "INSERT INTO names_of_courses (name) VALUES ('Немецкий базовый');",
+            "INSERT INTO names_of_courses (name) VALUES ('Немецкий для детей');",
+            "INSERT INTO names_of_courses (name) VALUES ('Французский базовый');",
+            "INSERT INTO names_of_courses (name) VALUES ('Французский продвинутый');",
+            "INSERT INTO names_of_courses (name) VALUES ('Японский базовый');"
+    };
 
-    String INSERT_TEACHERS= "INSERT INTO `languagesschool`.`teachers` (`first_name`, `middle_name`, `last_name`, `username`, `password`, `birthdate`, `gender`, `salary`, `id_language`) VALUES ('Андрей', 'Иванович', 'Егоров', 'egorov@teacher.ru', '12345', '1988-12-13', 'Male', '700', '1');\n" +
-            "INSERT INTO `languagesschool`.`teachers` (`first_name`, `middle_name`, `last_name`, `username`, `password`, `birthdate`, `gender`, `salary`, `id_language`) VALUES ('Сергей', 'Дмитрьевич', 'Русольцев', 'rusolcev@teacher.ru', '12345', '1986-09-01', 'Male', '800', '1');\n" +
-            "INSERT INTO `languagesschool`.`teachers` (`first_name`, `middle_name`, `last_name`, `username`, `password`, `birthdate`, `gender`, `salary`, `id_language`) VALUES ('Алина', 'Егоровна', 'Калодищ', 'kalodish@teacher.ru', '12345', '1990-04-05', 'Male', '800', '2');\n" +
-            "INSERT INTO `languagesschool`.`teachers` (`first_name`, `middle_name`, `last_name`, `username`, `password`, `birthdate`, `gender`, `salary`, `id_language`) VALUES ('Иван', 'Петрович', 'Румяный', 'rumyaniy@teacher.ru', '12345', '1995-11-17', 'Male', '800', '2');\n" +
-            "INSERT INTO `languagesschool`.`teachers` (`first_name`, `middle_name`, `last_name`, `username`, `password`, `birthdate`, `gender`, `salary`, `id_language`) VALUES ('Сергей', 'Рустамович', 'Сокирка', 'sockirka@teacher.ru', '12345', '1981-03-10', 'Male', '900', '3');\n" +
-            "INSERT INTO `languagesschool`.`teachers` (`first_name`, `middle_name`, `last_name`, `username`, `password`, `birthdate`, `gender`, `salary`, `id_language`) VALUES ('Елена', 'Михайловна', 'Пушкина', 'pyshkinaelena@teacher.ru', '12345', '1987-06-28', 'Female', '700', '3');\n" +
-            "INSERT INTO `languagesschool`.`teachers` (`first_name`, `middle_name`, `last_name`, `username`, `password`, `birthdate`, `gender`, `salary`, `id_language`) VALUES ('Кристина', 'Антоновна', 'Фалей', 'faleiy@teacher.ru', '12345', '1992-01-30', 'Female', '700', '4');\n" +
-            "INSERT INTO `languagesschool`.`teachers` (`first_name`, `middle_name`, `last_name`, `username`, `password`, `birthdate`, `gender`, `salary`, `id_language`) VALUES ('Ирина', 'Петровна', 'Муштакова', 'mushtakova@teacher.ru', '12345', '1972-04-29', 'Female', '750', '4');\n" +
-            "INSERT INTO `languagesschool`.`teachers` (`first_name`, `middle_name`, `last_name`, `username`, `password`, `birthdate`, `gender`, `salary`, `id_language`) VALUES ('Константин', 'Сергевич', 'Ильин', 'ilyine@teacher.ru', '12345', '1999-08-14', 'Male', '900', '5');\n" +
-            "INSERT INTO `languagesschool`.`teachers` (`first_name`, `middle_name`, `last_name`, `username`, `password`, `birthdate`, `gender`, `salary`, `id_language`) VALUES ('Валерий', 'Николаевич', 'Писняков', 'pisnyakov@teacher.ru', '1234', '1984-06-13', 'Male', '900', '6');\n";
+    String [] INSERT_STUDENTS = {
+            "INSERT INTO users (first_name, middle_name, last_name, login, password, birthdate, gender) " +
+                    "VALUES ('Иван', 'Антонович', 'Писляк', 'pislyakpetr@mail.ru', 'qwerty', '1996-09-12', 'Мужской');",
 
-    String INSERT_COURSES = "INSERT INTO `languagesschool`.`courses` (`id_name_of_course`, `id_language`, `id_level`, `id_teacher`, `cost`, `start_date`, `duration`) VALUES ('1', '1', '1', '1', '1200', '2019-09-01', '30');\n" +
-            "INSERT INTO `languagesschool`.`courses` (`id_name_of_course`, `id_language`, `id_level`, `id_teacher`, `cost`, `start_date`, `duration`) VALUES ('2', '1', '2', '2', '1400', '2019-09-01', '60');\n" +
-            "INSERT INTO `languagesschool`.`courses` (`id_name_of_course`, `id_language`, `id_level`, `id_teacher`, `cost`, `start_date`, `duration`) VALUES ('3', '1', '3', '1', '1400', '2019-10-01', '45');\n" +
-            "INSERT INTO `languagesschool`.`courses` (`id_name_of_course`, `id_language`, `id_level`, `id_teacher`, `cost`, `start_date`, `duration`) VALUES ('4', '1', '5', '2', '1400', '2019-11-01', '55');\n" +
-            "INSERT INTO `languagesschool`.`courses` (`id_name_of_course`, `id_language`, `id_level`, `id_teacher`, `cost`, `start_date`, `duration`) VALUES ('5', '2', '1', '4', '1000', '2019-09-01', '30');\n" +
-            "INSERT INTO `languagesschool`.`courses` (`id_name_of_course`, `id_language`, `id_level`, `id_teacher`, `cost`, `start_date`, `duration`) VALUES ('6', '2', '2', '3', '1200', '2019-09-01', '45');\n" +
-            "INSERT INTO `languagesschool`.`courses` (`id_name_of_course`, `id_language`, `id_level`, `id_teacher`, `cost`, `start_date`, `duration`) VALUES ('7', '2', '5', '4', '1400', '2019-11-01', '45');\n" +
-            "INSERT INTO `languagesschool`.`courses` (`id_name_of_course`, `id_language`, `id_level`, `id_teacher`, `cost`, `start_date`, `duration`) VALUES ('8', '4', '1', '7', '2000', '2019-10-01', '30');\n" +
-            "INSERT INTO `languagesschool`.`courses` (`id_name_of_course`, `id_language`, `id_level`, `id_teacher`, `cost`, `start_date`, `duration`) VALUES ('9', '3', '1', '5', '2000', '2019-09-01', '30');\n" +
-            "INSERT INTO `languagesschool`.`courses` (`id_name_of_course`, `id_language`, `id_level`, `id_teacher`, `cost`, `start_date`, `duration`) VALUES ('10', '3', '2', '6', '2500', '2019-09-01', '60');\n" +
-            "INSERT INTO `languagesschool`.`courses` (`id_name_of_course`, `id_language`, `id_level`, `id_teacher`, `cost`, `start_date`, `duration`) VALUES ('11', '5', '1', '9', '1200', '2019-09-01', '30');\n" +
-            "INSERT INTO `languagesschool`.`courses` (`id_name_of_course`, `id_language`, `id_level`, `id_teacher`, `cost`, `start_date`, `duration`) VALUES ('12', '5', '4', '9', '1500', '2019-12-01', '45');\n";
+            "INSERT INTO students (username) VALUES ('pislyakpetr@mail.ru');",
 
-    String INSERT_ORDER_COURSES = "INSERT INTO `languagesschool`.`orders_courses` (`username_student`, `id_course`) VALUES ('kateMal@icloud.com', '1');\n" +
-            "INSERT INTO `languagesschool`.`orders_courses` (`username_student`, `id_course`) VALUES ('kateMal@icloud.com', '2');\n" +
-            "INSERT INTO `languagesschool`.`orders_courses` (`username_student`, `id_course`) VALUES ('borisov1996@yandex.ru', '2');\n" +
-            "INSERT INTO `languagesschool`.`orders_courses` (`username_student`, `id_course`) VALUES ('kisslevPP@yandex.by', '3');\n" +
-            "INSERT INTO `languagesschool`.`orders_courses` (`username_student`, `id_course`) VALUES ('borisov1996@yandex.ru', '3');\n";
+            "INSERT INTO users (first_name, middle_name, last_name, login, password, birthdate, gender) " +
+                    "VALUES ('Петр', 'Васильвич', 'Киселев', 'kisslevPP@yandex.by', 'qwerty', '1990-04-05', 'Мужской');",
+
+            "INSERT INTO students (username) VALUES ('kisslevPP@yandex.by');",
+
+            "INSERT INTO users (first_name, middle_name, last_name, login, password, birthdate, gender) " +
+                    "VALUES ('Сергей', 'Павлович', 'Мошка', 'sergickmosh@gmail.com', 'qwerty', '1982-04-14', 'Мужской');",
+
+            "INSERT INTO students (username) VALUES ('sergickmosh@gmail.com');",
+
+            "INSERT INTO users (first_name, middle_name, last_name, login, password, birthdate, gender) " +
+                    "VALUES ('Евгений', 'Андреевич', 'Борисов', 'borisov1996@yandex.ru', 'qwerty', '1996-12-11', 'Мужской');",
+
+            "INSERT INTO students (username) VALUES ('borisov1996@yandex.ru');",
+
+            "INSERT INTO users (first_name, middle_name, last_name, login, password, birthdate, gender) " +
+                    "VALUES ('Екатерина', 'Петровна', 'Малышева', 'kateMal@icloud.com', 'qwerty', '1998-01-01', 'Женский');",
+
+            "INSERT INTO students (username) VALUES ('kateMal@icloud.com');"
+    };
+
+    String [] INSERT_TEACHERS = {
+            "INSERT INTO users (first_name, middle_name, last_name, login, password, birthdate, gender) " +
+                    "VALUES ('Андрей', 'Иванович', 'Егоров', 'egorov@teacher.ru', '12345', '1988-12-13', 'Мужской');",
+
+            "INSERT INTO teachers (username, salary, bio, id_language) VALUES ('egorov@teacher.ru', '700', '', 1);",
+
+            "INSERT INTO users (first_name, middle_name, last_name, login, password, birthdate, gender) " +
+                    "VALUES ('Сергей', 'Дмитриевич', 'Русольцев', 'rusolcev@teacher.ru', '12345', '1986-09-01', 'Мужской');",
+
+            "INSERT INTO teachers (username, salary, bio, id_language) VALUES ('rusolcev@teacher.ru', '800', '', 6);",
+
+            "INSERT INTO users (first_name, middle_name, last_name, login, password, birthdate, gender) " +
+                    "VALUES ('Алина', 'Егоровна', 'Калодищ', 'kalodish@teacher.ru', '12345', '1990-04-05', 'Женский');",
+
+            "INSERT INTO teachers (username, salary, bio, id_language) VALUES ('kalodish@teacher.ru', '800', '', 3);",
+
+            "INSERT INTO users (first_name, middle_name, last_name, login, password, birthdate, gender) " +
+                    "VALUES ('Иван', 'Петрович', 'Румяный', 'rumyaniy@teacher.ru', '12345', '1995-11-17', 'Мужской');",
+
+            "INSERT INTO teachers (username, salary, bio, id_language) VALUES ('rumyaniy@teacher.ru', '800', '', 2);",
+
+            "INSERT INTO users (first_name, middle_name, last_name, login, password, birthdate, gender) " +
+                    "VALUES ('Сергей', 'Рустамович', 'Сокирка', 'sockirka@teacher.ru', '12345', '1981-03-10', 'Мужской');",
+
+            "INSERT INTO teachers (username, salary, bio, id_language) VALUES ('sockirka@teacher.ru', '900', '', 5);",
+
+            "INSERT INTO users (first_name, middle_name, last_name, login, password, birthdate, gender) " +
+                    "VALUES ('Валентина', 'Витальевна', 'Шмидт', 'schmidt@teacher.ru', '12345', '1965-08-12', 'Женский');",
+
+            "INSERT INTO teachers (username, salary, bio, id_language) VALUES ('schmidt@teacher.ru', '800', '', 4);"
+    };
+
+    String [] INSERT_COURSES = {
+            "INSERT INTO courses (id_name_of_course, id_language, id_level, username_teacher, cost, start_date, duration, description) VALUES ('1', '1', '1', 'egorov@teacher.ru', '1200', '2019-03-01', '30','');",
+
+            "INSERT INTO courses (id_name_of_course, id_language, id_level, username_teacher, cost, start_date, duration, description) VALUES ('2', '1', '3', 'egorov@teacher.ru', '1400', '2019-02-01', '30','');",
+
+            "INSERT INTO courses (id_name_of_course, id_language, id_level, username_teacher, cost, start_date, duration, description) VALUES ('3', '1', '3', 'egorov@teacher.ru', '1400', '2019-02-01', '30','');",
+
+            "INSERT INTO courses (id_name_of_course, id_language, id_level, username_teacher, cost, start_date, duration, description) VALUES ('4', '1', '5', 'egorov@teacher.ru', '1600', '2019-02-01', '30','');",
+
+            "INSERT INTO courses (id_name_of_course, id_language, id_level, username_teacher, cost, start_date, duration, description) VALUES ('5', '6', '1', 'rusolcev@teacher.ru', '1200', '2019-04-01', '30','');",
+
+            "INSERT INTO courses (id_name_of_course, id_language, id_level, username_teacher, cost, start_date, duration, description) VALUES ('6', '3', '1', 'kalodish@teacher.ru', '1200', '2019-04-01', '30','');",
+
+            "INSERT INTO courses (id_name_of_course, id_language, id_level, username_teacher, cost, start_date, duration, description) VALUES ('7', '2', '5', 'rumyaniy@teacher.ru', '1600', '2019-02-01', '30','');",
+
+            "INSERT INTO courses (id_name_of_course, id_language, id_level, username_teacher, cost, start_date, duration, description) VALUES ('8', '2', '1', 'rumyaniy@teacher.ru', '1200', '2019-02-01', '30','');",
+
+            "INSERT INTO courses (id_name_of_course, id_language, id_level, username_teacher, cost, start_date, duration, description) VALUES ('9', '2', '2', 'rumyaniy@teacher.ru', '1300', '2019-02-01', '30','');",
+
+            "INSERT INTO courses (id_name_of_course, id_language, id_level, username_teacher, cost, start_date, duration, description) VALUES ('10', '5', '1', 'sockirka@teacher.ru', '1200', '2019-03-01', '30','');",
+
+            "INSERT INTO courses (id_name_of_course, id_language, id_level, username_teacher, cost, start_date, duration, description) VALUES ('11', '5', '5', 'sockirka@teacher.ru', '1600', '2019-04-01', '30','');",
+
+            "INSERT INTO courses (id_name_of_course, id_language, id_level, username_teacher, cost, start_date, duration, description) VALUES ('12', '4', '1', 'kalodish@teacher.ru', '1200', '2019-03-01', '30','');"
+    };
+
+    String [] INSERT_ORDER_COURSES = {
+            "INSERT INTO orders_courses (username_student, id_course) " +
+                    "VALUES ('kateMal@icloud.com', '1');",
+            "INSERT INTO orders_courses (username_student, id_course) " +
+                    "VALUES ('kateMal@icloud.com', '10');",
+            "INSERT INTO orders_courses (username_student, id_course) " +
+                    "VALUES ('borisov1996@yandex.ru', '2');",
+            "INSERT INTO orders_courses (username_student, id_course) " +
+                    "VALUES ('kisslevPP@yandex.by', '8');",
+            "INSERT INTO orders_courses (username_student, id_course) " +
+                    "VALUES ('pislyakpetr@mail.ru', '3');"
+    };
 }

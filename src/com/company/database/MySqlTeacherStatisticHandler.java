@@ -14,15 +14,22 @@ public class MySqlTeacherStatisticHandler extends MySqlHandler {
         List<TeacherStatistics> statistics = new ArrayList<>();
         ResultSet resultSet = null;
         try (Connection connection = getDBConnection()) {
-
             final String query =
-                    "select distinct names_of_courses.name, " +
-                            "count(students.username) over (partition by names_of_courses.name) from orders_courses\n" +
-                    "inner join courses on courses.id = orders_courses.id_course\n" +
-                    "inner join teachers on teachers.id = courses.id_teacher\n" +
-                    "inner join names_of_courses on courses.id_name_of_course = names_of_courses.id\n" +
-                    "inner join students on orders_courses.username_student = students.username\n" +
-                    "where teachers.username = ?;";
+                    "select distinct " +
+                            "names_of_courses.name, " +
+                            "count(students.username) " +
+                            "over (partition by names_of_courses.name) " +
+                            "from orders_courses\n" +
+                            "inner join courses " +
+                            "on courses.id = orders_courses.id_course " +
+                            "inner join teachers " +
+                            "on teachers.username = courses.username_teacher\n" +
+                            "inner join " +
+                            "names_of_courses " +
+                            "on courses.id_name_of_course = names_of_courses.id\n" +
+                            "inner join students " +
+                            "on orders_courses.username_student = students.username\n" +
+                            "where teachers.username = ?;";
 
             preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, username);

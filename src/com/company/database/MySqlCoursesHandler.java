@@ -14,25 +14,23 @@ public class MySqlCoursesHandler extends MySqlHandler {
         List<Course> courses = new ArrayList<>();
         ResultSet resultSet = null;
         try (Connection connection = getDBConnection()) {
-            final String query = "SELECT " +
-                    "LanguagesSchool.courses.id, " +
-                    "LanguagesSchool.courses.cost, " +
-                    "LanguagesSchool.courses.start_date, " +
-                    "LanguagesSchool.courses.duration, " +
-                    "LanguagesSchool.names_of_courses.name, " +
-                    "LanguagesSchool.languages.name, " +
-                    "LanguagesSchool.levels_of_language.level, " +
-                    "LanguagesSchool.teachers.last_name, " +
-                    "LanguagesSchool.teachers.first_name, " +
-                    "LanguagesSchool.teachers.middle_name " +
-                    "FROM LanguagesSchool.courses\n" +
-                    "\tINNER JOIN LanguagesSchool.names_of_courses " +
-                    "ON courses.id_name_of_course = LanguagesSchool.names_of_courses.id\n" +
-                    "    INNER JOIN LanguagesSchool.languages " +
-                    "ON courses.id_language = languages.id\n" +
-                    "    INNER JOIN LanguagesSchool.levels_of_language " +
-                    "ON courses.id_level = levels_of_language.id\n" +
-                    "    INNER JOIN LanguagesSchool.teachers ON courses.id_teacher = teachers.id;";
+            final String query = "select " +
+                    "courses.id, " +
+                    "courses.cost, " +
+                    "courses.start_date, " +
+                    "courses.duration, " +
+                    "names_of_courses.name, " +
+                    "languages.name, " +
+                    "levels_of_language.level, " +
+                    "users.last_name, " +
+                    "users.first_name, " +
+                    "users.middle_name " +
+                    "from courses " +
+                    "inner join names_of_courses on courses.id_name_of_course = names_of_courses.id " +
+                    "inner join languages on courses.id_language = languages.id\n" +
+                    "inner join levels_of_language on courses.id_level = levels_of_language.id " +
+                    "inner join users on courses.username_teacher = users.login " +
+                    "inner join teachers on users.login = teachers.username;";
             MySqlHandler.preparedStatement = connection.prepareStatement(query);
             resultSet = MySqlHandler.preparedStatement.executeQuery();
             return getCourses(courses, resultSet);
@@ -56,33 +54,26 @@ public class MySqlCoursesHandler extends MySqlHandler {
         List<Course> courses = new ArrayList<>();
         ResultSet resultSet = null;
         try (Connection connection = getDBConnection()) {
-
-            final String query = "SELECT " +
-                    "LanguagesSchool.courses.id, " +
-                    "LanguagesSchool.courses.cost, " +
-                    "LanguagesSchool.courses.start_date, " +
-                    "LanguagesSchool.courses.duration, " +
-                    "LanguagesSchool.names_of_courses.name, " +
-                    "LanguagesSchool.languages.name, " +
-                    "LanguagesSchool.levels_of_language.level, " +
-                    "LanguagesSchool.teachers.last_name, " +
-                    "LanguagesSchool.teachers.first_name, " +
-                    "LanguagesSchool.teachers.middle_name FROM " +
-                    "LanguagesSchool.orders_courses\n" +
-                    "\tINNER JOIN LanguagesSchool.students " +
-                    "ON students.username = orders_courses.username_student\n" +
-                    "   \tINNER JOIN LanguagesSchool.courses " +
-                    "ON courses.id = orders_courses.id_course\n" +
-                    "    \tINNER JOIN LanguagesSchool.names_of_courses " +
-                    "ON courses.id_name_of_course = LanguagesSchool.names_of_courses.id\n" +
-                    "    \tINNER JOIN LanguagesSchool.languages " +
-                    "ON courses.id_language = LanguagesSchool.languages.id\n" +
-                    "    \tINNER JOIN LanguagesSchool.levels_of_language " +
-                    "ON courses.id_level = LanguagesSchool.levels_of_language.id\n" +
-                    "    \tINNER JOIN LanguagesSchool.teachers " +
-                    "ON courses.id_teacher = LanguagesSchool.teachers.id\n" +
-                    "    \tWHERE username_student = ?;";
-
+            final String query = "select " +
+                    "courses.id, " +
+                    "courses.cost, " +
+                    "courses.start_date, " +
+                    "courses.duration, " +
+                    "names_of_courses.name, " +
+                    "languages.name, " +
+                    "levels_of_language.level, " +
+                    "users.last_name, " +
+                    "users.first_name, " +
+                    "users.middle_name " +
+                    "from courses " +
+                    "inner join names_of_courses on courses.id_name_of_course = names_of_courses.id " +
+                    "inner join languages on courses.id_language = languages.id\n" +
+                    "inner join levels_of_language on courses.id_level = levels_of_language.id " +
+                    "inner join users on courses.username_teacher = users.login " +
+                    "inner join teachers on users.login = teachers.username " +
+                    "inner join orders_courses on courses.id = orders_courses.id_course " +
+                    "inner join students on orders_courses.username_student = students.username " +
+                    "where username_student = ?;";
             preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, username);
 
@@ -108,28 +99,24 @@ public class MySqlCoursesHandler extends MySqlHandler {
         List<Course> courses = new ArrayList<>();
         ResultSet resultSet = null;
         try (Connection connection = getDBConnection()) {
-
-            final String query = "SELECT " +
-                    "                    LanguagesSchool.courses.id, " +
-                    "                    LanguagesSchool.courses.cost, " +
-                    "                    LanguagesSchool.courses.start_date, " +
-                    "                    LanguagesSchool.courses.duration, " +
-                    "                    LanguagesSchool.names_of_courses.name, " +
-                    "                    LanguagesSchool.languages.name, " +
-                    "                    LanguagesSchool.levels_of_language.level, " +
-                    "                    LanguagesSchool.teachers.last_name, " +
-                    "                    LanguagesSchool.teachers.first_name, " +
-                    "                    LanguagesSchool.teachers.middle_name FROM LanguagesSchool.courses" +
-                    "                    INNER JOIN LanguagesSchool.names_of_courses\n" +
-                    "                    ON courses.id_name_of_course = LanguagesSchool.names_of_courses.id" +
-                    "                    INNER JOIN LanguagesSchool.languages" +
-                    "                    ON courses.id_language = LanguagesSchool.languages.id" +
-                    "                    INNER JOIN LanguagesSchool.levels_of_language" +
-                    "                    ON courses.id_level = LanguagesSchool.levels_of_language.id" +
-                    "                    INNER JOIN LanguagesSchool.teachers " +
-                    "                    ON courses.id_teacher = LanguagesSchool.teachers.iD" +
-                    "                    WHERE teachers.username = ?;";
-
+            final String query = "select " +
+                    "courses.id, " +
+                    "courses.cost, " +
+                    "courses.start_date, " +
+                    "courses.duration, " +
+                    "names_of_courses.name, " +
+                    "languages.name, " +
+                    "levels_of_language.level, " +
+                    "users.last_name, " +
+                    "users.first_name, " +
+                    "users.middle_name " +
+                    "from courses\n" +
+                    "\tinner join names_of_courses on courses.id_name_of_course = names_of_courses.id\n" +
+                    "    inner join languages on courses.id_language = languages.id\n" +
+                    "    inner join levels_of_language on courses.id_level = levels_of_language.id\n" +
+                    "    inner join users on courses.username_teacher = users.login\n" +
+                    "    inner join teachers on users.login = teachers.username\n" +
+                    "\t\twhere teachers.username = ?;";
             preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, username);
 
