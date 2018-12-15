@@ -1,11 +1,9 @@
 package com.company.database;
 
-import com.company.database.configuration.DbTables;
 import com.company.model.Language;
 import com.company.model.Teacher;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -16,18 +14,17 @@ public class MySqlTeachersHandler extends MySqlHandler {
 
     public static boolean updateTeacher(Teacher teacher) {
         try (Connection connection = getDBConnection()) {
-            final String query = "UPDATE " + DbTables.TABLE_TEACHERS + " SET " +
-                    "LanguagesSchool.teachers.first_name = ?, " +
-                    "LanguagesSchool.teachers.middle_name = ?, " +
-                    "LanguagesSchool.teachers.last_name = ?, " +
-                    "LanguagesSchool.teachers.password = ?, " +
-                    "LanguagesSchool.teachers.birthdate = ?, " +
-                    "LanguagesSchool.teachers.gender = ?, " +
-                    "LanguagesSchool.teachers.salary = ?, " +
-                    "LanguagesSchool.teachers.bio = ? " +
-                    "WHERE (LanguagesSchool.teachers.username=?);";
+            final String query1 = "update users " +
+                    "set " +
+                    "users.first_name = ?, " +
+                    "users.middle_name = ?, " +
+                    "users.last_name = ?, " +
+                    "users.password = ?, " +
+                    "users.birthdate = ?, " +
+                    "users.gender = ? " +
+                    "where users.login = ?;";
 
-            preparedStatement = connection.prepareStatement(query);
+            preparedStatement = connection.prepareStatement(query1);
             preparedStatement.setString(1, teacher.getFirstName());
             preparedStatement.setString(2, teacher.getMiddleName());
             preparedStatement.setString(3, teacher.getLastName());
@@ -36,18 +33,20 @@ public class MySqlTeachersHandler extends MySqlHandler {
             cal.setTime(teacher.getBirthdate());
             String formatedDate = cal.get(Calendar.YEAR) + "-" + (cal.get(Calendar.MONTH) + 1) + "-" + cal.get(Calendar.DATE);
             preparedStatement.setString(5, formatedDate);
-            preparedStatement.setString(6, (teacher.isMale() ? "Male" : "Female"));
-            preparedStatement.setDouble(7, teacher.getSalary());
-            preparedStatement.setString(8, teacher.getInfo());
-            preparedStatement.setString(9, teacher.getUsername());
+            preparedStatement.setString(6, (teacher.isMale() ? "Мужской" : "Женский"));
+            preparedStatement.setString(7, teacher.getUsername());
+            preparedStatement.execute();
 
-            int rows = preparedStatement.executeUpdate();
+            final String query2 = "update teachers set teachers.salary = ? " +
+                    "where teachers.username = ?;";
 
-            if (rows == 1) {
-                return true;
-            } else {
-                throw new RuntimeException("Teacher " + teacher.toString() + "is not updated");
-            }
+            preparedStatement = connection.prepareStatement(query2);
+            preparedStatement.setDouble(1, teacher.getSalary());
+            preparedStatement.setString(2, teacher.getUsername());
+
+            preparedStatement.execute();
+
+            return true;
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
@@ -60,35 +59,34 @@ public class MySqlTeachersHandler extends MySqlHandler {
         ResultSet resultSet = null;
         try (Connection connection = getDBConnection()) {
 
-            final String query = "SELECT LanguagesSchool.teachers.id,\n" +
-                    "                LanguagesSchool.teachers.first_name,\n" +
-                    "                LanguagesSchool.teachers.last_name,\n" +
-                    "                LanguagesSchool.teachers.middle_name,\n" +
-                    "                LanguagesSchool.teachers.username,\n" +
-                    "                LanguagesSchool.teachers.password,\n" +
-                    "                LanguagesSchool.teachers.birthdate, \n" +
-                    "                LanguagesSchool.teachers.gender,\n" +
-                    "                LanguagesSchool.teachers.salary,\n" +
-                    "                LanguagesSchool.teachers.bio,\n" +
-                    "                LanguagesSchool.languages.name\n" +
-                    "                FROM LanguagesSchool.teachers \n" +
-                    "                INNER JOIN LanguagesSchool.languages " +
-                    "on teachers.id_language = LanguagesSchool.languages.id\n" +
-                    "                where teachers.username = ? and teachers.password = ?;";
+            final String query = "select " +
+                    "users.last_name, " +
+                    "users.first_name, " +
+                    "users.middle_name, " +
+                    "users.login, " +
+                    "users.password, " +
+                    "users.birthdate, " +
+                    "users.gender, " +
+                    "teachers.salary, " +
+                    "teachers.bio, " +
+                    "languages.name " +
+                    "from users " +
+                    "inner join teachers on users.login = teachers.username " +
+                    "inner join languages on teachers.id_language = languages.id " +
+                    "where teachers.username = ? and users.password = ?;";
 
             preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, teacher.getUsername());
             preparedStatement.setString(2, teacher.getPassword());
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                teacher.setId(resultSet.getInt("id"));
                 teacher.setFirstName(resultSet.getString("first_name"));
                 teacher.setMiddleName(resultSet.getString("middle_name"));
                 teacher.setLastName(resultSet.getString("last_name"));
-                teacher.setUsername(resultSet.getString("username"));
+                teacher.setUsername(resultSet.getString("login"));
                 teacher.setPassword(resultSet.getString("password"));
                 teacher.setBirthdate(resultSet.getDate("birthdate"));
-                teacher.setMale(resultSet.getString("gender").equalsIgnoreCase("male"));
+                teacher.setMale(resultSet.getString("gender").equalsIgnoreCase("Мужской"));
                 teacher.setSalary(resultSet.getDouble("salary"));
                 teacher.setInfo(resultSet.getString("bio"));
                 Language language = new Language();
@@ -118,19 +116,17 @@ public class MySqlTeachersHandler extends MySqlHandler {
         try (Connection connection = getDBConnection()) {
 
             final String query = "select " +
-                    "LanguagesSchool.teachers.first_name, " +
-                    "LanguagesSchool.teachers.middle_name, " +
-                    "LanguagesSchool.teachers.last_name," +
-                    "LanguagesSchool.teachers.birthdate, " +
-                    "LanguagesSchool.languages.name " +
-                    "from LanguagesSchool.courses\n" +
-                    "    inner join LanguagesSchool.teachers " +
-                    "on LanguagesSchool.courses.id_teacher = LanguagesSchool.teachers.id\n" +
-                    "    inner join LanguagesSchool.languages " +
-                    "on courses.id_language = languages.id\n" +
-                    "    inner join LanguagesSchool.orders_courses " +
-                    "on courses.id = LanguagesSchool.orders_courses.id_course\n" +
-                    "    where LanguagesSchool.orders_courses.username_student = ?;";
+                    "users.first_name, " +
+                    "users.middle_name, " +
+                    "users.last_name, " +
+                    "users.birthdate, " +
+                    "languages.name " +
+                    "from courses " +
+                    "inner join users on courses.username_teacher = users.login " +
+                    "    inner join teachers on courses.username_teacher = teachers.username " +
+                    "    inner join languages on courses.id_language = languages.id " +
+                    "    inner join orders_courses on courses.id = orders_courses.id_course " +
+                    " where orders_courses.username_student = ? ;";
 
             preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, username);
@@ -170,18 +166,20 @@ public class MySqlTeachersHandler extends MySqlHandler {
         try (Connection connection = getDBConnection()) {
 
             final String query = "select " +
-                    "LanguagesSchool.teachers.id, " +
-                    "LanguagesSchool.teachers.first_name, " +
-                    "LanguagesSchool.teachers.middle_name, " +
-                    "LanguagesSchool.teachers.last_name, " +
-                    "LanguagesSchool.teachers.username, " +
-                    "LanguagesSchool.teachers.password, " +
-                    "LanguagesSchool.teachers.birthdate, " +
-                    "LanguagesSchool.teachers.gender, " +
-                    "LanguagesSchool.teachers.salary, " +
-                    "LanguagesSchool.teachers.bio, " +
-                    "LanguagesSchool.languages.name from LanguagesSchool.teachers\n" +
-                    "    inner join LanguagesSchool.languages on LanguagesSchool.teachers.id_language = languages.id;";
+                    "teachers.id, " +
+                    "users.first_name, " +
+                    "users.middle_name, " +
+                    "users.last_name, " +
+                    "users.login, " +
+                    "users.password, " +
+                    "users.birthdate, " +
+                    "users.gender, " +
+                    "teachers.salary, " +
+                    "teachers.bio, " +
+                    "languages.name " +
+                    "from users\n" +
+                    "\tinner join teachers on users.login = teachers.username\n" +
+                    "    inner join languages on teachers.id_language = languages.id;\n";
 
             preparedStatement = connection.prepareStatement(query);
 
@@ -195,7 +193,7 @@ public class MySqlTeachersHandler extends MySqlHandler {
                 teacher.setUsername(resultSet.getString(5));
                 teacher.setPassword(resultSet.getString(6));
                 teacher.setBirthdate(resultSet.getDate(7));
-                teacher.setMale(resultSet.getString(8).equalsIgnoreCase("Male"));
+                teacher.setMale(resultSet.getString(8).equalsIgnoreCase("Мужской"));
                 teacher.setSalary(resultSet.getDouble(9));
                 teacher.setInfo(resultSet.getString(10));
                 Language language = new Language();
@@ -240,18 +238,14 @@ public class MySqlTeachersHandler extends MySqlHandler {
 
     public static boolean insertTeacher(Teacher teacher) {
         try (Connection connection = getDBConnection()) {
-            final String query = "INSERT INTO `languagesschool`.`teachers` (" +
-                    "`first_name`, " +
-                    "`middle_name`, " +
-                    "`last_name`, " +
-                    "`username`, " +
-                    "`password`, " +
-                    "`birthdate`, " +
-                    "`gender`, " +
-                    "`salary`, " +
-                    "`id_language`" +
-                    ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
-            preparedStatement = connection.prepareStatement(query);
+            final String query1 = "INSERT INTO " +
+                    "users (" +
+                    "first_name, " +
+                    "middle_name, last_name, " +
+                    "login, password, " +
+                    "birthdate, " +
+                    "gender) VALUES (?,?,?,?,?, ?, ?);";
+            preparedStatement = connection.prepareStatement(query1);
             Calendar cal = Calendar.getInstance();
             cal.setTime(teacher.getBirthdate());
             String formatedDate = cal.get(Calendar.YEAR) + "-" + (cal.get(Calendar.MONTH) + 1) + "-" + cal.get(Calendar.DATE);
@@ -261,10 +255,20 @@ public class MySqlTeachersHandler extends MySqlHandler {
             preparedStatement.setString(4, teacher.getUsername());
             preparedStatement.setString(5, teacher.getPassword());
             preparedStatement.setString(6, formatedDate);
-            preparedStatement.setString(7, (teacher.isMale() ? "Male" : "Female"));
-            preparedStatement.setDouble(8, teacher.getSalary());
-            preparedStatement.setInt(9, teacher.getLanguage().getId());
-            return preparedStatement.execute();
+            preparedStatement.setString(7, (teacher.isMale() ? "Мужской" : "Женский"));
+            preparedStatement.execute();
+
+            final String query2 = "INSERT INTO " +
+                    "teachers (" +
+                    "username, " +
+                    "salary, " +
+                    "id_language) VALUES (?, ?, ?);";
+            preparedStatement = connection.prepareStatement(query2);
+            preparedStatement.setString(1,teacher.getUsername());
+            preparedStatement.setDouble(2, teacher.getSalary());
+            preparedStatement.setInt(3, teacher.getLanguage().getId());
+            preparedStatement.execute();
+            return true;
         } catch (SQLException e) {
             e.printStackTrace();
             return false;

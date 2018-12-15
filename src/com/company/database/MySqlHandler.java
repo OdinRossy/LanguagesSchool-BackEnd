@@ -4,10 +4,7 @@ import com.company.database.configuration.DbConfiguration;
 import com.company.database.configuration.DbQueries;
 import com.company.database.configuration.DbTables;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class MySqlHandler implements DbConfiguration {
 
@@ -23,6 +20,9 @@ public class MySqlHandler implements DbConfiguration {
         }
         if (tableName.equals(DbTables.TABLE_NAMES_OF_COURSES)) {
             return executeCustomQuery(DbQueries.CREATE_TABLE_NAMES_OF_COURSES);
+        }
+        if (tableName.equals(DbTables.TABLE_USERS)) {
+            return executeCustomQuery(DbQueries.CREATE_TABLE_USERS);
         }
         if (tableName.equals(DbTables.TABLE_STUDENTS)) {
             return executeCustomQuery(DbQueries.CREATE_TABLE_STUDENTS);
@@ -42,36 +42,50 @@ public class MySqlHandler implements DbConfiguration {
         return false;
     }
 
-    public static boolean importData(String tableName) {
+    public static void importData(String tableName) {
 
         if (tableName.equals(DbTables.TABLE_LANGUAGES)) {
-            return executeCustomQuery(DbQueries.INSERT_LANGUAGES);
+            for (String query: DbQueries.INSERT_LANGUAGES) {
+                executeCustomQuery(query);
+            }
         }
         if (tableName.equals(DbTables.TABLE_LEVELS_OF_LANGUAGE)) {
-            return executeCustomQuery(DbQueries.INSERT_LEVELS_OF_LANGUAGE);
+            for (String query: DbQueries.INSERT_LEVELS_OF_LANGUAGE) {
+                executeCustomQuery(query);
+            }
         }
         if (tableName.equals(DbTables.TABLE_NAMES_OF_COURSES)) {
-            return executeCustomQuery(DbQueries.INSERT_NAMES_OF_COURSES);
+            for (String query: DbQueries.INSERT_NAMES_OF_COURSES) {
+                executeCustomQuery(query);
+            }
         }
         if (tableName.equals(DbTables.TABLE_STUDENTS)) {
-            return executeCustomQuery(DbQueries.INSERT_STUDENTS);
+            for (String query: DbQueries.INSERT_STUDENTS) {
+                executeCustomQuery(query);
+            }
         }
         if (tableName.equals(DbTables.TABLE_TEACHERS)) {
-            return executeCustomQuery(DbQueries.INSERT_TEACHERS);
+            for (String query: DbQueries.INSERT_TEACHERS) {
+                executeCustomQuery(query);
+            }
         }
         if (tableName.equals(DbTables.TABLE_COURSES)) {
-            return executeCustomQuery(DbQueries.INSERT_COURSES);
+            for (String query: DbQueries.INSERT_COURSES) {
+                executeCustomQuery(query);
+            }
         }
         if (tableName.equals(DbTables.TABLE_ORDER_COURSES)) {
-            return executeCustomQuery(DbQueries.INSERT_ORDER_COURSES);
+            for (String query: DbQueries.INSERT_ORDER_COURSES) {
+                executeCustomQuery(query);
+            }
         }
-        return false;
     }
 
     private static boolean executeCustomQuery(String query) {
         try (Connection connection = getDBConnection()) {
             preparedStatement = connection.prepareStatement(query);
-            return preparedStatement.execute();
+            preparedStatement.execute();
+            return true;
         } catch (SQLException e) {
             e.printStackTrace();
             return false;

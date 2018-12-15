@@ -41,6 +41,9 @@ public class App {
                 System.out.println("Create table " + DbTables.TABLE_NAMES_OF_COURSES + ": "
                         + MySqlHandler.createTable(DbTables.TABLE_NAMES_OF_COURSES));
 
+                System.out.println("Create table " + DbTables.TABLE_USERS + ": "
+                        + MySqlHandler.createTable(DbTables.TABLE_USERS));
+
                 System.out.println("Create table " + DbTables.TABLE_STUDENTS + ": "
                         + MySqlHandler.createTable(DbTables.TABLE_STUDENTS));
 
@@ -58,26 +61,15 @@ public class App {
 
                 System.out.println("======================================================================");
                 System.out.println("Importing data..");
-                System.out.println("Insert " + DbTables.TABLE_LANGUAGES + ": " +
-                        MySqlHandler.importData(DbTables.TABLE_LANGUAGES));
 
-                System.out.println("Insert " + DbTables.TABLE_LEVELS_OF_LANGUAGE + ": " +
-                        MySqlHandler.importData(DbTables.TABLE_LEVELS_OF_LANGUAGE));
+                MySqlHandler.importData(DbTables.TABLE_LANGUAGES);
+                MySqlHandler.importData(DbTables.TABLE_LEVELS_OF_LANGUAGE);
+                MySqlHandler.importData(DbTables.TABLE_NAMES_OF_COURSES);
+                MySqlHandler.importData(DbTables.TABLE_STUDENTS);
+                MySqlHandler.importData(DbTables.TABLE_TEACHERS);
+                MySqlHandler.importData(DbTables.TABLE_COURSES);
+                MySqlHandler.importData(DbTables.TABLE_ORDER_COURSES);
 
-                System.out.println("Insert " + DbTables.TABLE_NAMES_OF_COURSES + ": " +
-                        MySqlHandler.importData(DbTables.TABLE_NAMES_OF_COURSES));
-
-                System.out.println("Insert " + DbTables.TABLE_STUDENTS + ": " +
-                        MySqlHandler.importData(DbTables.TABLE_STUDENTS));
-
-                System.out.println("Insert " + DbTables.TABLE_TEACHERS + ": " +
-                        MySqlHandler.importData(DbTables.TABLE_TEACHERS));
-
-                System.out.println("Insert " + DbTables.TABLE_COURSES + ": " +
-                        MySqlHandler.importData(DbTables.TABLE_COURSES));
-
-                System.out.println("Insert " + DbTables.TABLE_ORDER_COURSES + ": " +
-                        MySqlHandler.importData(DbTables.TABLE_ORDER_COURSES));
                 break;
             }
             case "n" :{
