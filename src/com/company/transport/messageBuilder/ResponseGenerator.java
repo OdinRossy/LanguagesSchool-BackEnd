@@ -127,7 +127,12 @@ public class ResponseGenerator implements ServerConfiguration {
                 HelpStudent helpStudent = (HelpStudent) request.getModel();
                 return HelpStudentWorker.insertHelpStudent(helpStudent);
             }
-
+            case "Admin" : {
+                Admin admin = (Admin) request.getModel();
+                if (admin.getAction().equals(Admin.ACTION_STOP_SERVER)){
+                    System.exit(0);
+                }
+            }
             default:
                 throw new RuntimeException("Unknown model " + modelName);
         }
